@@ -3,6 +3,8 @@ from flask import session
 
 app = Flask(__name__)
 
+app.secret_key = "tictactoe-secret"
+
 # Game state
 board = [' '] * 9
 current_player = "X"
