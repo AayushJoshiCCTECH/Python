@@ -58,10 +58,6 @@ def reset():
     current_player = "X"
     return redirect(url_for("index"))
 
-@app.route("/")
-def index():
-    return "Tic Tac Toe is live on Render!"
-
 
 
 if __name__ == "__main__":
