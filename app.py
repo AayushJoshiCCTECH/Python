@@ -10,7 +10,7 @@ board = [' '] * 9
 current_player = "X"
 
 
-def check_winner(player):
+def check_winner(board, player):
     win_conditions = [
         (0, 1, 2), (3, 4, 5), (6, 7, 8),
         (0, 3, 6), (1, 4, 7), (2, 5, 8),
@@ -19,8 +19,9 @@ def check_winner(player):
     return any(all(board[i] == player for i in combo) for combo in win_conditions)
 
 
-def is_draw():
+def is_draw(board):
     return all(cell in ["X", "O"] for cell in board)
+
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -43,14 +44,13 @@ def index():
             if 0 <= move < 9 and board[move] == ' ':
                 board[move] = current_player
 
-                if check_winner(current_player):
+                if check_winner(board, current_player):
                     message = f"Player {current_player} wins!"
-                elif is_draw():
+                elif is_draw(board):
                     message = "It's a draw!"
                 else:
-                    session["current_player"] = (
-                        "O" if current_player == "X" else "X"
-                    )
+                    session["current_player"] = "O" if current_player == "X" else "X"
+
 
         session["board"] = board
 
