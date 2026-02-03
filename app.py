@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask import session
 
 app = Flask(__name__)
 
@@ -22,8 +23,13 @@ def is_draw():
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    global current_player
 
+    if "board" not in session:
+        session["board"] = [' '] * 9
+        session["current_player"] = "X"
+
+    board = session["board"]
+    current_player = session["current_player"]
     message = ""
 
     if request.method == "POST":
@@ -40,23 +46,24 @@ def index():
                 elif is_draw():
                     message = "It's a draw!"
                 else:
-                    current_player = "O" if current_player == "X" else "X"
+                    session["current_player"] = (
+                        "O" if current_player == "X" else "X"
+                    )
 
+        session["board"] = board
 
     return render_template(
         "index.html",
         board=board,
-        current_player=current_player,
+        current_player=session["current_player"],
         message=message
     )
 
-
 @app.route("/reset")
 def reset():
-    global board, current_player
-    board = [' '] * 9
-    current_player = "X"
+    session.clear()
     return redirect(url_for("index"))
+
 
 
 
